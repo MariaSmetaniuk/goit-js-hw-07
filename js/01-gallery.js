@@ -23,18 +23,18 @@ galleryRef.insertAdjacentHTML('beforeend', galleryElements);
 // делегування кліку по картинках
 galleryRef.addEventListener('click', onOpenModal);
 
-
-// змінна екземпляру класу модалки
-let modalInstance;
+// бібліотека для модалки
+const modalInstance = basicLightbox.create(`<img src="">`, {
+    onShow: (modalInstance) => window.addEventListener('keydown', onEscClose),
+    onClose: (modalInstance) => window.removeEventListener('keydown', onEscClose),
+  }); 
 
 // функція відкриття модалки
 function onOpenModal(e) {
   e.preventDefault();
   if (e.target.nodeName !== 'IMG') return;
 
-  window.addEventListener('keydown', onEscClose);
-
-  modalInstance = basicLightbox.create(`<img src="${e.target.dataset.source}">`);  
+  modalInstance.element().querySelector('img').src = e.target.dataset.source;
   modalInstance.show();
 }
 
@@ -42,6 +42,5 @@ function onOpenModal(e) {
 function onEscClose(e) {
   if (e.code !== 'Escape') return;
 
-  modalInstance.close(); 
-  window.removeEventListener('keydown', onEscClose);
+  modalInstance.close();
 }
